@@ -73,6 +73,14 @@ Frontend runs on `http://127.0.0.1:5173` and posts turns to the backend on `http
 
 For the voice demo, use Chrome or Edge so the browser speech APIs are available.
 
+For deployed frontend builds, set:
+
+```bash
+VITE_API_BASE_URL=https://your-backend-project.vercel.app
+```
+
+Without this, the deployed UI will still try to call localhost and voice turns will fail after transcription.
+
 ## Architecture summary
 
 The architecture is intentionally split into thin, testable layers:
@@ -220,6 +228,31 @@ Run backend tests:
 cd backend
 python -m unittest discover -s tests
 ```
+
+## Vercel deployment
+
+Deploy as two Vercel projects:
+
+- Backend project with root directory `backend`
+- Frontend project with root directory `frontend`
+
+In the frontend Vercel project, add:
+
+```bash
+VITE_API_BASE_URL=https://your-backend-project.vercel.app
+```
+
+Voice input in production requires:
+
+- `https://` deployment or `localhost`
+- Chrome or Edge for the best Web Speech API support
+- microphone permission enabled in the browser
+
+For the backend Vercel project:
+
+- set root directory to `backend`
+- Vercel should serve [index.py](/F:/NEXTWAVE/2care.ai_Assessment/backend/index.py:1) as the FastAPI entrypoint
+- on Vercel, SQLite now defaults to `/tmp/agent.db` because the deployed filesystem is not writable like local disk
 
 ## Suggested next production upgrades
 

@@ -73,8 +73,14 @@ const speechLanguageMap: Record<string, string> = {
   ta: "ta-IN"
 };
 
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
+
 function supportsBrowserVoice() {
-  return Boolean(window.SpeechRecognition || window.webkitSpeechRecognition) && "speechSynthesis" in window;
+  return (
+    window.isSecureContext &&
+    Boolean(window.SpeechRecognition || window.webkitSpeechRecognition) &&
+    "speechSynthesis" in window
+  );
 }
 
 function createRecognition() {
@@ -139,27 +145,39 @@ export default function App() {
     setLoading(true);
     pushConversationTurn({ speaker: "patient", text: resolvedTranscript, language: selectedLocale });
 
-    const response = await fetch("http://127.0.0.1:8000/api/turn", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        patient_id: patientId,
-        transcript: resolvedTranscript,
-        channel,
-        campaign_id: channel === "outbound" ? campaignId : null
-      })
-    });
-    const data: Reply = await response.json();
-    setReply(data);
-    pushConversationTurn({ speaker: "agent", text: data.text, language: data.language });
-    setSelectedLocale(speechLanguageMap[data.language] || selectedLocale);
-    speakReply(data);
-    setLoading(false);
+    try {
+      const response = await fetch(`${apiBaseUrl}/api/turn`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patient_id: patientId,
+          transcript: resolvedTranscript,
+          channel,
+          campaign_id: channel === "outbound" ? campaignId : null
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`Backend request failed with ${response.status}`);
+      }
+      const data: Reply = await response.json();
+      setReply(data);
+      pushConversationTurn({ speaker: "agent", text: data.text, language: data.language });
+      setSelectedLocale(speechLanguageMap[data.language] || selectedLocale);
+      speakReply(data);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? `${requestError.message}. Check VITE_API_BASE_URL and backend deployment.`
+          : "Could not reach the backend."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   function startListening() {
     if (!speechSupported) {
-      setError("This browser does not support Web Speech API. Use Chrome or Edge for the voice demo.");
+      setError("Voice input requires Chrome or Edge over HTTPS or localhost. Use typed mode if browser speech is unavailable.");
       return;
     }
 
@@ -282,7 +300,7 @@ export default function App() {
 
         <p className="status">
           <strong>Voice status:</strong> {speechSupported ? speechState : "unsupported"}{" "}
-          {speechSupported ? "using browser speech APIs" : "use typed mode or Chrome/Edge for voice"}
+          {speechSupported ? `using browser speech APIs and ${apiBaseUrl}` : "use Chrome/Edge over HTTPS or typed mode"}
         </p>
         {error && <p className="error">{error}</p>}
       </section>
