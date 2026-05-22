@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7efe5"/>
+      <stop offset="100%" stop-color="#e8f7f9"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 28px Georgia, serif; fill: #17323c; }
+      .label { font: 600 18px 'Segoe UI', sans-serif; fill: #17323c; }
+      .copy { font: 400 15px 'Segoe UI', sans-serif; fill: #28444f; }
+      .box { fill: rgba(255,255,255,0.92); stroke: #98bcc5; stroke-width: 2; rx: 20; }
+      .accent { fill: #0b7285; }
+      .line { stroke: #0b7285; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#0b7285"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="760" fill="url(#bg)"/>
+  <text x="60" y="70" class="title">2care Real-Time Multilingual Voice Agent</text>
+  <rect x="60" y="120" width="240" height="130" class="box"/>
+  <text x="85" y="160" class="label">Voice IO Layer</text>
+  <text x="85" y="190" class="copy">WebRTC / SIP ingress</text>
+  <text x="85" y="215" class="copy">Streaming STT, TTS, barge-in hooks</text>
+
+  <rect x="380" y="120" width="260" height="170" class="box"/>
+  <text x="405" y="160" class="label">Realtime Orchestrator</text>
+  <text x="405" y="190" class="copy">Turn state + interrupt handling</text>
+  <text x="405" y="215" class="copy">Language detection</text>
+  <text x="405" y="240" class="copy">Latency budget accounting</text>
+  <text x="405" y="265" class="copy">Reasoning trace emission</text>
+
+  <rect x="720" y="120" width="250" height="170" class="box"/>
+  <text x="745" y="160" class="label">Agent Brain</text>
+  <text x="745" y="190" class="copy">Tool-planning loop</text>
+  <text x="745" y="215" class="copy">Intent + slot extraction</text>
+  <text x="745" y="240" class="copy">Multilingual response framing</text>
+  <text x="745" y="265" class="copy">Fallback / repair prompts</text>
+
+  <rect x="1040" y="120" width="180" height="170" class="box"/>
+  <text x="1065" y="160" class="label">Outbound Jobs</text>
+  <text x="1065" y="190" class="copy">Campaign queue</text>
+  <text x="1065" y="215" class="copy">Reminder / follow-up runs</text>
+  <text x="1065" y="240" class="copy">Outcome logging</text>
+
+  <rect x="290" y="410" width="250" height="180" class="box"/>
+  <text x="315" y="450" class="label">Session Memory</text>
+  <text x="315" y="480" class="copy">Current intent</text>
+  <text x="315" y="505" class="copy">Pending confirmations</text>
+  <text x="315" y="530" class="copy">TTL cache for low latency</text>
+
+  <rect x="620" y="410" width="270" height="180" class="box"/>
+  <text x="645" y="450" class="label">Cross-Session Memory</text>
+  <text x="645" y="480" class="copy">Patient language preference</text>
+  <text x="645" y="505" class="copy">Appointment history</text>
+  <text x="645" y="530" class="copy">Recent interactions + reason</text>
+
+  <rect x="970" y="410" width="220" height="180" class="box"/>
+  <text x="995" y="450" class="label">Scheduling Tools</text>
+  <text x="995" y="480" class="copy">Conflict detection</text>
+  <text x="995" y="505" class="copy">Alternative slot search</text>
+  <text x="995" y="530" class="copy">Cancellation / reschedule</text>
+
+  <path d="M300 185 H380" class="line"/>
+  <path d="M640 205 H720" class="line"/>
+  <path d="M970 205 H1040" class="line"/>
+  <path d="M510 290 V410" class="line"/>
+  <path d="M820 290 V410" class="line"/>
+  <path d="M970 500 H890" class="line"/>
+  <path d="M620 500 H540" class="line"/>
+  <text x="60" y="700" class="copy">Demo implementation in this repository uses FastAPI + React with deterministic tool planning for local reproducibility. Provider adapters can replace the planner with streaming LLM/STT/TTS services.</text>
+</svg>
+
